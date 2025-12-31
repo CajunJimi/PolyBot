@@ -561,7 +561,7 @@ class DataCollector:
 
                     # Store REAL orderbook data
                     ob = OrderBook(
-                        time=timestamp,
+                        timestamp=timestamp,
                         market_id=market.id,
                         token_id=token_id,
                         outcome=outcome,

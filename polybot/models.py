@@ -98,39 +98,38 @@ class Market(Base):
 
 
 class OrderBook(Base):
-    """Orderbook snapshot (TimescaleDB hypertable)."""
+    """Orderbook snapshot."""
 
     __tablename__ = "orderbooks"
 
-    # TimescaleDB uses time as primary key component
-    time: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), primary_key=True, nullable=False
-    )
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
     market_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("markets.id", ondelete="CASCADE"), primary_key=True
+        Integer, ForeignKey("markets.id", ondelete="CASCADE"), nullable=False
     )
-    token_id: Mapped[str] = mapped_column(String(100), primary_key=True, nullable=False)
-    outcome: Mapped[str | None] = mapped_column(String(50))
-    best_bid: Mapped[Decimal | None] = mapped_column(Numeric(8, 6))
-    best_ask: Mapped[Decimal | None] = mapped_column(Numeric(8, 6))
-    mid_price: Mapped[Decimal | None] = mapped_column(Numeric(8, 6))
-    spread: Mapped[Decimal | None] = mapped_column(Numeric(8, 6))
-    spread_bps: Mapped[int | None] = mapped_column(Integer)
-    bid_depth: Mapped[Decimal | None] = mapped_column(Numeric(18, 2))
-    ask_depth: Mapped[Decimal | None] = mapped_column(Numeric(18, 2))
-    imbalance: Mapped[Decimal | None] = mapped_column(Numeric(4, 3))
+    token_id: Mapped[str] = mapped_column(String(100), nullable=False)
+    timestamp: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    best_bid: Mapped[float | None] = mapped_column()
+    best_ask: Mapped[float | None] = mapped_column()
+    mid_price: Mapped[float | None] = mapped_column()
+    spread: Mapped[float | None] = mapped_column()
+    spread_bps: Mapped[float | None] = mapped_column()
+    depth_1pct: Mapped[float | None] = mapped_column()
+    bid_depth: Mapped[float | None] = mapped_column()
+    ask_depth: Mapped[float | None] = mapped_column()
+    imbalance: Mapped[float | None] = mapped_column()
     bids: Mapped[dict[str, Any] | None] = mapped_column(JSON)
     asks: Mapped[dict[str, Any] | None] = mapped_column(JSON)
+    outcome: Mapped[str | None] = mapped_column(String(100))
 
     # Relationships
     market: Mapped["Market"] = relationship(back_populates="orderbooks")
 
     __table_args__ = (
-        Index("idx_orderbooks_market_time", "market_id", "time"),
+        Index("idx_orderbooks_market_time", "market_id", "timestamp"),
     )
 
     def __repr__(self) -> str:
-        return f"<OrderBook market_id={self.market_id} time={self.time}>"
+        return f"<OrderBook market_id={self.market_id} timestamp={self.timestamp}>"
 
 
 class Trade(Base):
