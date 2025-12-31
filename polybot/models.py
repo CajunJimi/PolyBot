@@ -145,16 +145,12 @@ class Trade(Base):
     market_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("markets.id", ondelete="CASCADE"), nullable=False
     )
-    condition_id: Mapped[str | None] = mapped_column(String(100))
     token_id: Mapped[str | None] = mapped_column(String(100))
     side: Mapped[str] = mapped_column(String(4), nullable=False)
     outcome: Mapped[str | None] = mapped_column(String(50))
     price: Mapped[Decimal] = mapped_column(Numeric(8, 6), nullable=False)
     size: Mapped[Decimal] = mapped_column(Numeric(18, 6), nullable=False)
     size_usd: Mapped[Decimal | None] = mapped_column(Numeric(18, 2))
-    maker_address: Mapped[str | None] = mapped_column(String(100))
-    taker_address: Mapped[str | None] = mapped_column(String(100))
-    is_whale: Mapped[bool] = mapped_column(Boolean, default=False)
 
     # Relationships
     market: Mapped["Market"] = relationship(back_populates="trades")

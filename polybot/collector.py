@@ -696,16 +696,12 @@ class DataCollector:
                         timestamp=trade_time,
                         trade_id=str(trade_id),
                         market_id=market.id,
-                        condition_id=condition_id,
                         token_id=t.get("asset", ""),
                         side=t.get("side", "BUY").upper(),
                         outcome=t.get("outcome", ""),
                         price=price,
                         size=size,
                         size_usd=value_usd,
-                        maker_address=t.get("maker"),
-                        taker_address=t.get("taker"),
-                        is_whale=is_whale,
                     )
                     session.add(trade)
                     collected += 1
