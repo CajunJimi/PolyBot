@@ -137,10 +137,11 @@ class Trade(Base):
 
     __tablename__ = "trades"
 
-    time: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), primary_key=True, nullable=False
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    timestamp: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False
     )
-    trade_id: Mapped[str] = mapped_column(String(100), primary_key=True, nullable=False)
+    trade_id: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
     market_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("markets.id", ondelete="CASCADE"), nullable=False
     )
@@ -150,7 +151,7 @@ class Trade(Base):
     outcome: Mapped[str | None] = mapped_column(String(50))
     price: Mapped[Decimal] = mapped_column(Numeric(8, 6), nullable=False)
     size: Mapped[Decimal] = mapped_column(Numeric(18, 6), nullable=False)
-    value_usd: Mapped[Decimal | None] = mapped_column(Numeric(18, 2))
+    size_usd: Mapped[Decimal | None] = mapped_column(Numeric(18, 2))
     maker_address: Mapped[str | None] = mapped_column(String(100))
     taker_address: Mapped[str | None] = mapped_column(String(100))
     is_whale: Mapped[bool] = mapped_column(Boolean, default=False)
@@ -159,7 +160,7 @@ class Trade(Base):
     market: Mapped["Market"] = relationship(back_populates="trades")
 
     __table_args__ = (
-        Index("idx_trades_market_time", "market_id", "time"),
+        Index("idx_trades_market_time", "market_id", "timestamp"),
     )
 
     def __repr__(self) -> str:
@@ -258,7 +259,6 @@ class CollectionHealth(Base):
     avg_latency_ms: Mapped[Decimal | None] = mapped_column(Numeric(10, 2))
     items_collected: Mapped[int] = mapped_column(Integer, default=0)
     gap_detected: Mapped[bool] = mapped_column(Boolean, default=False)
-    error_message: Mapped[str | None] = mapped_column(Text)
 
     __table_args__ = (
         Index("idx_health_component_time", "component", "timestamp"),

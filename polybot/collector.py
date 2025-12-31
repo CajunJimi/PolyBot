@@ -693,7 +693,7 @@ class DataCollector:
 
                     # Store trade
                     trade = Trade(
-                        time=trade_time,
+                        timestamp=trade_time,
                         trade_id=str(trade_id),
                         market_id=market.id,
                         condition_id=condition_id,
@@ -702,7 +702,7 @@ class DataCollector:
                         outcome=t.get("outcome", ""),
                         price=price,
                         size=size,
-                        value_usd=value_usd,
+                        size_usd=value_usd,
                         maker_address=t.get("maker"),
                         taker_address=t.get("taker"),
                         is_whale=is_whale,
@@ -789,7 +789,6 @@ class DataCollector:
                     avg_latency_ms=avg_latency,
                     items_collected=metrics["items_collected"],
                     gap_detected=metrics["failures"] >= 3,
-                    error_message=metrics["last_error"],
                 )
                 session.add(health)
 
