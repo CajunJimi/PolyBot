@@ -18,6 +18,7 @@ from sqlalchemy import (
     JSON,
     Boolean,
     DateTime,
+    Enum as SQLEnum,
     ForeignKey,
     Index,
     Integer,
@@ -132,6 +133,10 @@ class OrderBook(Base):
         return f"<OrderBook market_id={self.market_id} timestamp={self.timestamp}>"
 
 
+# PostgreSQL enum type for trade side (matches existing DB)
+orderside_enum = SQLEnum('BUY', 'SELL', name='orderside', create_type=False)
+
+
 class Trade(Base):
     """Trade from Polymarket Data API (TimescaleDB hypertable)."""
 
@@ -146,7 +151,7 @@ class Trade(Base):
         Integer, ForeignKey("markets.id", ondelete="CASCADE"), nullable=False
     )
     token_id: Mapped[str | None] = mapped_column(String(100))
-    side: Mapped[str] = mapped_column(String(4), nullable=False)
+    side: Mapped[str] = mapped_column(orderside_enum, nullable=False)
     price: Mapped[Decimal] = mapped_column(Numeric(8, 6), nullable=False)
     size: Mapped[Decimal] = mapped_column(Numeric(18, 6), nullable=False)
     size_usd: Mapped[Decimal | None] = mapped_column(Numeric(18, 2))
