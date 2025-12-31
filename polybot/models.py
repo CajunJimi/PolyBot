@@ -147,7 +147,6 @@ class Trade(Base):
     )
     token_id: Mapped[str | None] = mapped_column(String(100))
     side: Mapped[str] = mapped_column(String(4), nullable=False)
-    outcome: Mapped[str | None] = mapped_column(String(50))
     price: Mapped[Decimal] = mapped_column(Numeric(8, 6), nullable=False)
     size: Mapped[Decimal] = mapped_column(Numeric(18, 6), nullable=False)
     size_usd: Mapped[Decimal | None] = mapped_column(Numeric(18, 2))

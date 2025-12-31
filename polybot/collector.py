@@ -698,7 +698,6 @@ class DataCollector:
                         market_id=market.id,
                         token_id=t.get("asset", ""),
                         side=t.get("side", "BUY").upper(),
-                        outcome=t.get("outcome", ""),
                         price=price,
                         size=size,
                         size_usd=value_usd,
